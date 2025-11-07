@@ -98,6 +98,7 @@ h' = Poseidon(did, m, r, policy_id, version)
 P' = H2C(h')
 assert(P' == P)
 assert(m.age >= threshold)
+```
 
 使用 Groth16 生成 ZK 证明：
 
@@ -106,24 +107,24 @@ proof = groth16.Prove(circuit, witness)
 
 将 proof + public inputs (P.x, P.y, threshold[, did …]) 上传链上进行验证。
 
-3. 链上（Solidity）
+#### 3. 链上（Solidity）
 
 链上通过 Oracle 签名验证与 ZK 验证器合约完成最终校验。
 
-OracleSigVerifier.sol
+- OracleSigVerifier.sol
 
 使用 EVM 预编译的 BN254 pairing 验证 Oracle 签名：
 
 pairing(σ, g2) == pairing(P, pk_oracle)
 
 
-Groth16Verifier.sol
+- Groth16Verifier.sol
 
 由 gnark 或 snarkjs 自动生成的 ZK 证明验证器；
 
 验证 Prover 生成的证明有效性。
 
-PolicyRouter.sol
+- PolicyRouter.sol
 
 整合两步验证逻辑：先验签，再验 ZK；
 
@@ -137,6 +138,7 @@ PolicyRouter.sol
 
 Poseidon 哈希	gnark-crypto/ecc/bn254/fr/poseidon 或 gnark/std/hash/poseidon
 Hash-to-Curve	- 方案A（推荐）：电路中实现 ZK 友好 H2C（简化 SWU / try-and-increment）
+
 - 方案B（快速原型）：限定 2~3 次 try-and-increment，失败路径用选择器屏蔽
 
 ⚠️ 注意：Oracle 与电路中必须使用完全一致的 HashToCurve 规则以确保验证一致性。
