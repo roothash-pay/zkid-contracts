@@ -181,24 +181,25 @@ Oracle 层	Oracle Service	负责签发属性承诺与签名
 ### 📚 开发指引
 
 Go 环境
-
+```
 go get github.com/ConsenSys/gnark
 go get github.com/ConsenSys/gnark-crypto
-
+```
 
 电路编译
-
+```
 go run main.go build-circuit
-
+```
 
 证明生成
-
+```
 go run main.go prove
-
+```
 
 Solidity 验证
-
+```
 forge test
+```
 
 ### 📖 参考
 
