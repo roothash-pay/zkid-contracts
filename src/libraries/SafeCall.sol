@@ -43,10 +43,7 @@ library SafeCall {
         return _hasMinGas;
     }
 
-    function callWithMinGas(address _target, uint256 _minGas, uint256 _value, bytes memory _calldata)
-        internal
-        returns (bool)
-    {
+    function callWithMinGas(address _target, uint256 _minGas, uint256 _value, bytes memory _calldata) internal returns (bool) {
         bool _success;
         bool _hasMinGas = hasMinGas(_minGas, 0);
         assembly {

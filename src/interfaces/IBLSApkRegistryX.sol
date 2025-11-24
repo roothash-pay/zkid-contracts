@@ -15,8 +15,8 @@ interface IBLSApkRegistryX {
         bytes24 apkHash;
         uint32 updateBlockNumber;
         uint32 nextUpdateBlockNumber;
-        // 新增字段，链上保存 AP G1
-        BN254.G1Point apkG1; // 存储聚合 G1 点 (X,Y)
+        // New field: store AP G1 on-chain
+        BN254.G1Point apkG1; // Store the aggregated G1 point (X, Y)
     }
 
     struct PubkeyRegistrationParams {
@@ -35,16 +35,9 @@ interface IBLSApkRegistryX {
 
     function deregisterOperator(address operator) external;
 
-    function registerBLSPublicKey(
-        address operator,
-        PubkeyRegistrationParams calldata params,
-        BN254.G1Point memory msgHash
-    ) external returns (bytes32);
+    function registerBLSPublicKey(address operator, PubkeyRegistrationParams calldata params, BN254.G1Point memory msgHash) external returns (bytes32);
 
-    function checkSignatures(bytes32 msgHash, uint256 referenceBlockNumber, NonSignerAndSignature memory params)
-        external
-        view
-        returns (uint256, bytes32);
+    function checkSignatures(bytes32 msgHash, uint256 referenceBlockNumber, NonSignerAndSignature memory params) external view returns (uint256, bytes32);
 
     function getRegisteredPubkey(address operator) external view returns (BN254.G1Point memory, bytes32);
 

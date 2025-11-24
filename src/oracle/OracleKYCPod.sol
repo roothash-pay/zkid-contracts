@@ -3,37 +3,29 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin-upgrades/contracts/access/OwnableUpgradeable.sol";
 import "@openzeppelin-upgrades/contracts/proxy/utils/Initializable.sol";
-
-import "../interfaces/IOracleKYCPod.sol";
+import "./OracleKYCPodStorage.sol";
 
 /**
  * @title OracleKYCPod
- * @notice 存储每个用户的KYC验证结果与承诺值C。
- * @dev 以用户地址为键；did不暴露在链上。
+ * @notice Stores each user's KYC verification result and commitment value C.
+ * @dev Uses the user address as the key; the DID is not exposed on-chain.
  */
-contract OracleKYCPod is Initializable, OwnableUpgradeable, IOracleKYCPod {
-    mapping(address => Record) public kycRecords; // user => Record
-
-    event KYCRecorded(address indexed user, uint256 commitment);
-
+contract OracleKYCPod is Initializable, OwnableUpgradeable, OracleKYCPodStorage {
     function initialize(address _initialOwner) external initializer {
         __Ownable_init(_initialOwner);
     }
 
     /**
-     * @notice 记录用户的KYC验证结果
-     * @dev 仅OracleKYCManager(Owner)可调用
+     * @notice Record a user's KYC verification result
+     * @dev Only OracleKYCManager (Owner) can call this
      *
      * Commitment = Poseidon(m, r, did, policy_id, version)
-     *   m：用户私有的 KYC 明文（如 age、nationality）
-     *         r：随机盐（或 derived from did）
-     *         did：隐私身份标识
-     *         policy_id / version：策略上下文
+     *   m: user's private KYC plaintext (such as age, nationality)
+     *   r: random salt (or derived from did)
+     *   did: private identity identifier
+     *   policy_id / version: policy context
      */
-    function recordVerification(
-        address user,
-        uint256 commitment
-    ) external onlyOwner {
+    function recordVerification(address user, uint256 commitment) external onlyOwner {
         Record storage rec = kycRecords[user];
         rec.commitment = commitment;
 
@@ -53,6 +45,4 @@ contract OracleKYCPod is Initializable, OwnableUpgradeable, IOracleKYCPod {
     function getCommitment(address user) external view returns (uint256) {
         return kycRecords[user].commitment;
     }
-
-    uint256[50] private __gap;
 }
