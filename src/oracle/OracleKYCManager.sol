@@ -34,7 +34,7 @@ contract OracleKYCManager is Initializable, OwnableUpgradeable, PodManager, Orac
         (uint256 totalStake, bytes32 signPodHash) = blsApkRegistry.checkSignatures(params.msgHash, params.refBlock, oracleNonSignerAndSignature);
 
         // Persist state
-        oraclePod.recordVerification(params.user, params.commitment);
+        oraclePod.recordVerification(params.user, params.isVerified, params.commitment);
 
         emit KYCVerified(params.user, params.commitment, signPodHash, totalStake);
     }
